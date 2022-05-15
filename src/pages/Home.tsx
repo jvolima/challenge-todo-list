@@ -9,7 +9,7 @@ export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   function handleAddTask(newTaskTitle: string) {
-    const taskAlreadyExists = tasks.find(task => task.title === newTaskTitle);
+    const taskAlreadyExists = tasks.find(task => task.title === newTaskTitle.trim());
 
     if (taskAlreadyExists) {
       Alert.alert('Task já cadastrada', 'Você não pode cadastrar uma task com o mesmo nome');
@@ -17,7 +17,7 @@ export function Home() {
     }
 
     const newTask: Task = {
-      title: newTaskTitle,
+      title: newTaskTitle.trim(),
       done: false,
       id: new Date().getTime()
     };
@@ -49,6 +49,17 @@ export function Home() {
     ])
   }
 
+  function handleEditTask(taskId: number, taskNewTitle: string) {
+    setTasks(oldState => [...oldState.map((item, index) => {
+      if(item.id === taskId) {
+        item.title = taskNewTitle;
+        return item;
+      } else {
+        return item;
+      }
+    })]);
+  }
+
   return (
     <View style={styles.container}>
       <Header tasksCounter={tasks.length} />
@@ -59,6 +70,7 @@ export function Home() {
         tasks={tasks} 
         toggleTaskDone={handleToggleTaskDone}
         removeTask={handleRemoveTask} 
+        editTask={handleEditTask}
       />
     </View>
   )
